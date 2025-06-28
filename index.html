@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LSPD Incident Report Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #0e1a2b;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #1f2f4a;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 4px solid #f1c40f;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #f1c40f;
+    }
+
+    main {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .left, .right {
+      flex: 1;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .section h2,
+    .laws h2 {
+      margin-bottom: 10px;
+      font-size: 20px;
+      color: #f1c40f;
+    }
+
+    .section label,
+    .laws label {
+      font-weight: normal;
+      background: #1f2f4a;
+      padding: 8px;
+      border-radius: 6px;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      margin: 0;
+      flex-shrink: 0;
+      transform: scale(1.2);
+    }
+
+    button {
+      background-color: #f1c40f;
+      color: #0e1a2b;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background-color: #d4ac0d;
+    }
+
+    #output {
+      white-space: pre-wrap;
+      background-color: #0e1a2b;
+      padding: 15px;
+      margin-top: 25px;
+      border-radius: 8px;
+      border: 1px solid #f1c40f;
+      font-family: monospace;
+    }
+
+    .law-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .penalty {
+      font-size: 13px;
+      color: #bbb;
+      margin-top: 4px;
+      margin-left: 26px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>LSPD INCIDENT REPORT</h1>
+  </header>
+
+  <main>
+    <div class="left">
+      <label>Jméno a příjmení:
+        <input type="text" id="suspectName">
+      </label>
+
+      <label>DOB podezřelého:
+        <input type="date" id="suspectDOB">
+      </label>
+
+      <label>Telefonní číslo podezřelého:
+        <input type="tel" id="suspectPhone">
+      </label>
+
+      <label>Popis události:
+        <textarea id="eventDesc"></textarea>
+      </label>
+
+      <label>Zabavené věci:
+        <textarea id="seizedItems"></textarea>
+      </label>
+
+      <label>Zatýkající strážník:
+        <input type="text" id="arrestingOfficer">
+      </label>
+
+      <div class="section">
+        <h2>Crime Type</h2>
+        <label><input type="radio" name="crimeType" value="Infraction"> Infraction (přestupek)</label>
+        <label><input type="radio" name="crimeType" value="Misdemeanor"> Misdemeanor (přečin)</label>
+        <label><input type="radio" name="crimeType" value="Felony"> Felony (zločin)</label>
+      </div>
+
+      <button onclick="generateReport()">Generovat zprávu</button>
+      <div id="output"></div>
+    </div>
+
+    <div class="right">
+      <div class="laws">
+        <h2>Penal Code (PEN)</h2>
+        <label>
+          <input type="checkbox" value="§187 PEN - Vražda">
+          <div class="law-text">
+            <span>§187 – Vražda: Nezákonné usmrcení lidské bytosti s úmyslem.</span>
+            <span class="penalty">Trest: 15–25 let až doživotí</span>
+          </div>
+        </label>
+
+        <label>
+          <input type="checkbox" value="§245(a)(1) - Napadení se smrtící zbraní">
+          <div class="law-text">
+            <span>§245(a)(1): Útok se smrtící zbraní.</span>
+            <span class="penalty">Trest: 2–4 roky (felony), až 1 rok (misdemeanor)</span>
+          </div>
+        </label>
+
+        <label>
+          <input type="checkbox" value="§211 PC – Loupež ">
+          <div class="law-text">
+            <span>§211 PC – Loupež: Odebrání cizího majetku.</span>
+            <span class="penalty">Trest: 2-5 let</span>
+          </div>
+        </label>        
+      </div>
+
+      <div class="laws">
+        <h2>Vehicle Code (VEH)</h2>
+        <label>
+          <input type="checkbox" value="§23152(a) – Řízení pod vlivem">
+          <div class="law-text">
+            <span>§23152(a): Řízení pod vlivem alkoholu nebo drog.</span>
+            <span class="penalty">Trest: až 6 měsíců + odebrání řidičáku</span>
+          </div>
+        </label>
+
+        <label>
+          <input type="checkbox" value="§23153(a) – DUI způsobující zranění">
+          <div class="law-text">
+            <span>§23153(a): DUI s následkem zranění.</span>
+            <span class="penalty">Trest: až 4 roky + pokuta + restituce</span>
+          </div>
+        </label>
+      </div>
+
+      <div class="laws">
+        <h2>Health and Safety Code (HSC)</h2>
+        <label>
+          <input type="checkbox" value="§11351 HSC – Držení látek k prodeji">
+          <div class="law-text">
+            <span>§11351 HSC: Držení kontrolovaných látek za účelem prodeje.</span>
+            <span class="penalty">Trest: 2–4 roky + $20.000</span>
+          </div>
+        </label>
+
+        <label>
+          <input type="checkbox" value="§11352 HSC – Distribuce látek">
+          <div class="law-text">
+            <span>§11352 HSC: Prodej/distribuce kontrolovaných látek.</span>
+            <span class="penalty">Trest: 3–9 let + $20.000</span>
+          </div>
+        </label>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function generateReport() {
+      const name = document.getElementById('suspectName').value;
+      const dob = document.getElementById('suspectDOB').value;
+      const phone = document.getElementById('suspectPhone').value;
+      const eventDesc = document.getElementById('eventDesc').value;
+      const seized = document.getElementById('seizedItems').value;
+      const officer = document.getElementById('arrestingOfficer').value;
+      const crimeType = document.querySelector('input[name="crimeType"]:checked');
+      const checked = Array.from(document.querySelectorAll('.laws input:checked')).map(cb => cb.value);
+
+      let report = "--- LSPD INCIDENT REPORT ---\n\n";
+      report += `🗥️ Jméno a příjmení: ${name}\n`;
+      report += `🗕️ Datum narození: ${dob}\n`;
+      report += `📞 Telefon: ${phone}\n\n`;
+      report += `📄 Popis události:\n${eventDesc}\n\n`;
+      report += `📦 Zabavené věci:\n${seized}\n\n`;
+      report += `👮 Zatýkající strážník: ${officer}\n\n`;
+
+      if (crimeType) {
+        report += `🔍 Typ trestného činu: ${crimeType.value}\n\n`;
+      }
+
+      report += `📚 Porušené zákony:\n`;
+      checked.forEach(l => report += `- ${l}\n\n`);
+
+      report += `Dohoda o vině trestu: ${name} narozen/a ${dob} souhlasí se všemi obviněními a souhlasí s trestem (DOPLNIT) podle:\n`;
+      checked.forEach(l => report += `- ${l}\n`);
+
+      document.getElementById('output').textContent = report;
+    }
+  </script>
+</body>
+</html>
