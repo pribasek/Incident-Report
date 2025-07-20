@@ -142,10 +142,6 @@
         <input type="date" id="suspectDOB">
       </label>
 
-      <label>Telefonní číslo podezřelého:
-        <input type="tel" id="suspectPhone">
-      </label>
-
       <label>Popis události:
         <textarea id="eventDesc"></textarea>
       </label>
@@ -251,7 +247,6 @@
       let report = "--- LSPD INCIDENT REPORT ---\n\n";
       report += `🗥️ Jméno a příjmení: ${name}\n`;
       report += `🗕️ Datum narození: ${dob}\n`;
-      report += `📞 Telefon: ${phone}\n\n`;
       report += `📄 Popis události:\n${eventDesc}\n\n`;
       report += `📦 Zabavené věci:\n${seized}\n\n`;
       report += `👮 Zatýkající strážník: ${officer}\n\n`;
